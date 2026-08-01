@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Ne Tür Bir Başkansın? — Efsane Başkan</title>
+<meta name="description" content="Beş soru. İki eksen. Efsane Başkan'da hangi yönetici tipisin?">
+<meta name="color-scheme" content="dark">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-top:#0A1220; --bg-bot:#050A14;
+    --gold:#E8C87A; --gold-hi:#F5DFA8; --steel:#2C4763;
+    --line:rgba(232,200,122,.22); --ink:#FFFFFF; --muted:rgba(255,255,255,.62);
+    --card:rgba(255,255,255,.035);
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  /* must win over the display values set on .screen / .badge below */
+  [hidden]{display:none !important}
+  html,body{min-height:100%}
+  body{
+    background:radial-gradient(120% 70% at 50% 0%,#12203a 0%,var(--bg-top) 42%,var(--bg-bot) 100%) no-repeat fixed var(--bg-bot);
+    color:var(--ink);
+    font-family:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif;
+    font-size:16px;line-height:1.55;-webkit-font-smoothing:antialiased;
+    padding:28px 20px 48px;
+  }
+  .app{max-width:480px;margin:0 auto}
+  h1,h2,.persona-name{font-family:'Playfair Display',Georgia,'Times New Roman',serif;font-weight:700;letter-spacing:.2px}
+  .screen{animation:fade .28s ease both}
+  .screen[hidden]{display:none}
+  .fading{opacity:0;transform:translateY(6px);transition:opacity .16s ease,transform .16s ease}
+  @keyframes fade{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  @media (prefers-reduced-motion:reduce){.screen,.fading{animation:none;transition:none;opacity:1;transform:none}}
+
+  .eyebrow{font-size:11px;letter-spacing:.24em;text-transform:uppercase;color:var(--gold);font-weight:600}
+  .rule{height:1px;background:linear-gradient(90deg,transparent,var(--line),transparent);margin:22px 0}
+
+  /* Intro */
+  .crest{width:56px;height:56px;margin:0 auto 22px;border:1px solid var(--line);border-radius:50%;
+    display:grid;place-items:center;color:var(--gold);font-family:'Playfair Display',serif;font-size:22px;
+    background:rgba(232,200,122,.05);box-shadow:0 0 32px rgba(232,200,122,.10) inset}
+  #intro{text-align:center;padding-top:8vh}
+  #intro h1{font-size:38px;line-height:1.12;margin:14px 0 16px;
+    background:linear-gradient(180deg,var(--gold-hi),var(--gold) 60%,#b9954c);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .lede{color:var(--muted);font-size:15px;max-width:340px;margin:0 auto 30px}
+
+  /* Buttons */
+  button{font:inherit;color:inherit;cursor:pointer;border:0;background:none}
+  .btn{display:block;width:100%;padding:15px 18px;border-radius:12px;font-weight:600;font-size:15px;
+    transition:transform .12s ease,background .18s ease,border-color .18s ease}
+  .btn-primary{background:linear-gradient(180deg,var(--gold-hi),var(--gold));color:#10182a;
+    box-shadow:0 10px 30px -12px rgba(232,200,122,.6)}
+  .btn-ghost{border:1px solid rgba(255,255,255,.16);background:var(--card);color:var(--ink)}
+  .btn:hover{transform:translateY(-1px)}
+  .btn:active{transform:translateY(0)}
+  :focus-visible{outline:2px solid var(--gold-hi);outline-offset:3px;border-radius:12px}
+
+  /* Quiz */
+  .progress-row{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:10px}
+  .track{height:2px;background:rgba(255,255,255,.10);border-radius:2px;overflow:hidden;margin-bottom:30px}
+  .track span{display:block;height:100%;background:linear-gradient(90deg,var(--steel),var(--gold));
+    border-radius:2px;transition:width .35s cubic-bezier(.4,0,.2,1)}
+  #qtext{font-size:26px;line-height:1.25;margin-bottom:24px}
+  .options{display:grid;gap:10px}
+  .opt{width:100%;text-align:left;padding:16px 18px;border-radius:12px;border:1px solid rgba(255,255,255,.10);
+    background:var(--card);font-size:15px;line-height:1.45;display:flex;gap:13px;align-items:flex-start;
+    transition:border-color .18s ease,background .18s ease,transform .12s ease}
+  .opt .key{color:var(--gold);font-weight:700;font-size:12px;letter-spacing:.1em;padding-top:2px;flex:0 0 auto}
+  .opt:hover,.opt:focus-visible{border-color:var(--line);background:rgba(232,200,122,.07);transform:translateY(-1px)}
+
+  /* Result */
+  .card{border:1px solid var(--line);border-radius:18px;padding:28px 24px;text-align:center;
+    background:linear-gradient(180deg,rgba(44,71,99,.34),rgba(255,255,255,.02));
+    box-shadow:0 24px 60px -30px rgba(0,0,0,.9)}
+  .badge{display:inline-block;font-size:10px;letter-spacing:.22em;font-weight:700;color:var(--gold-hi);
+    border:1px solid var(--line);border-radius:999px;padding:4px 11px;margin-bottom:14px;
+    background:rgba(232,200,122,.08)}
+  .persona-name{font-size:33px;line-height:1.15;margin-bottom:16px;
+    background:linear-gradient(180deg,var(--gold-hi),var(--gold) 65%,#c2a05a);
+    -webkit-background-clip:text;background-clip:text;color:transparent}
+  .desc{color:rgba(255,255,255,.80);font-size:15px;text-align:left}
+  .sig{margin-top:20px;padding-top:18px;border-top:1px solid rgba(255,255,255,.10);text-align:left}
+  .sig p{font-size:15px;color:var(--gold-hi);font-style:italic;margin-top:5px}
+
+  .axes{margin-top:22px;display:grid;gap:18px}
+  .axis-labels{display:flex;justify-content:space-between;font-size:10px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+  .axis-labels .on{color:var(--gold)}
+  .meter{position:relative;height:6px;border-radius:3px;background:rgba(255,255,255,.08);
+    border:1px solid rgba(255,255,255,.06)}
+  .meter i{position:absolute;top:-3px;bottom:-3px;left:50%;width:1px;background:rgba(255,255,255,.22)}
+  .meter b{position:absolute;top:50%;width:13px;height:13px;margin:-6.5px 0 0 -6.5px;border-radius:50%;
+    background:var(--gold-hi);box-shadow:0 0 0 4px rgba(232,200,122,.16),0 0 16px rgba(232,200,122,.5);
+    transition:left .5s cubic-bezier(.4,0,.2,1)}
+  .actions{display:grid;gap:10px;margin-top:26px}
+  .note{text-align:center;font-size:12px;color:var(--muted);min-height:18px;margin-top:12px}
+  .sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+</style>
+</head>
+<body>
+<main class="app">
+
+  <section class="screen" id="intro">
+    <div class="crest" aria-hidden="true">EB</div>
+    <p class="eyebrow">Efsane Başkan</p>
+    <h1>Ne Tür Bir<br>Başkansın?</h1>
+    <p class="lede">Beş soru, iki eksen ve kulübünü gerçekte nasıl yönettiğine dair dürüst bir cevap.</p>
+    <button class="btn btn-primary" id="startBtn" type="button">Başla</button>
+  </section>
+
+  <section class="screen" id="quiz" hidden>
+    <div class="progress-row">
+      <p class="eyebrow" id="progress">Soru 1 / 5</p>
+      <p class="eyebrow" id="counter" style="color:rgba(255,255,255,.35)">EB</p>
+    </div>
+    <div class="track"><span id="bar" style="width:0%"></span></div>
+    <h2 id="qtext" tabindex="-1"></h2>
+    <div class="options" id="options" role="group" aria-labelledby="qtext"></div>
+    <p class="sr" id="live" role="status" aria-live="polite"></p>
+  </section>
+
+  <section class="screen" id="result" hidden>
+    <p class="eyebrow" style="text-align:center;margin-bottom:16px">Sonuç</p>
+    <!-- lang="en": persona copy is English; under lang="tr" the uppercase
+         transform would apply Turkish casing (i -> İ) to the labels. -->
+    <div class="card" lang="en">
+      <p class="badge" id="rare" hidden>RARE</p>
+      <h2 class="persona-name" id="pName" tabindex="-1"></h2>
+      <p class="desc" id="pDesc"></p>
+      <div class="sig">
+        <p class="eyebrow">Signature move</p>
+        <p id="pSig"></p>
+      </div>
+      <div class="axes">
+        <div>
+          <div class="axis-labels"><span id="lxA">Pitch</span><span id="lxB">Boardroom</span></div>
+          <div class="meter"><i></i><b id="dotX" style="left:50%"></b></div>
+        </div>
+        <div>
+          <div class="axis-labels"><span id="lyA">Patience</span><span id="lyB">Impulse</span></div>
+          <div class="meter"><i></i><b id="dotY" style="left:50%"></b></div>
+        </div>
+      </div>
+    </div>
+    <div class="actions">
+      <button class="btn btn-primary" id="againBtn" type="button">Tekrar oyna</button>
+      <button class="btn btn-ghost" id="copyBtn" type="button">Sonucu kopyala</button>
+    </div>
+    <p class="note" id="note"></p>
+  </section>
+
+</main>
+<script>
+(function () {
+  "use strict";
+
+  /* Axis X: PITCH (-) <-> BOARDROOM (+)   Axis Y: PATIENCE (-) <-> IMPULSE (+) */
+  var QUESTIONS = [
+    { q: "Favori diziliğin?", options: [
+      { t: "4-4-2. Klasik, disiplinli, herkes yerini biliyor.", x: -2, y: -2 },
+      { t: "4-2-4. Kalede bile hücum düşünen bir takım istiyorum.", x: -2, y:  2 },
+      { t: "Altyapıdan çıkan çocuklar hangi sisteme uyuyorsa o.", x:  1, y: -2 },
+      { t: "Yeni transferin en iyi oynadığı dizilişi kurarım.", x:  2, y:  1 }
+    ]},
+    { q: "Devre arası, 2-0 geridesin. Ne değiştiriyorsun?", options: [
+      { t: "Hiçbir şey. Plan doğru, goller gelecek.", x: -2, y: -2 },
+      { t: "Üç oyuncu birden. Şimdi, hep birlikte.", x: -2, y:  2 },
+      { t: "Maç biterken telefonu açarım. Teknik direktörün durumu değişti.", x: 2, y: 2 },
+      { t: "Bu akşam hiçbir şey. Bu kadro yaz bütçesiyle onarılır.", x: 2, y: -2 }
+    ]},
+    { q: "İlk büyük yatırımın nereye?", options: [
+      { t: "Stadyum. Kulübün geliri de kimliği de oradan doğar.", x:  2, y: -2 },
+      { t: "Tesis. Sahada kazanan takım orada hazırlanır.", x: -2, y: -1 },
+      { t: "Scout ağı. Kimsenin izlemediği maçlarda oturan gözler.", x: 1, y: -1 },
+      { t: "Medya ajansı. Kulübün adı, sahadan önce konuşulur.", x: 2, y: 2 }
+    ]},
+    { q: "Rakip kulüp en iyi genç oyuncun için servet teklif etti.", options: [
+      { t: "Satılık değil. Önümüzdeki beş yılın omurgası o çocuk.", x: -1, y: -2 },
+      { t: "Satarım: geri alım maddesi ve yüzde otuz pay şartıyla.", x:  2, y: -1 },
+      { t: "Parayı alır, bu pencerede üç oyuncuya çeviririm.", x:  2, y:  2 },
+      { t: "Onu bu hafta derbide ilk on birde oynatırım. Teklif kendiliğinden düşer.", x: -2, y: 2 }
+    ]},
+    { q: "Transfer dönemi stratejin?", options: [
+      { t: "Tek yıldız. Soyunma odasının havasını değiştiren bir isim.", x:  1, y:  2 },
+      { t: "Beş rotasyon oyuncusu. Ligi kadro derinliği kazanır.", x:  1, y: -2 },
+      { t: "Transfer yok. Altyapıdan üç isim A takıma çıkıyor.", x: -2, y: -2 },
+      { t: "Yıldızı alırım, üçünü satarak finanse ederim. Son gün, son saat.", x: 2, y: 2 }
+    ]}
+  ];
+
+  var PERSONAS = {
+    tactician: {
+      name: "THE TACTICIAN",
+      desc: "You won this match on a Thursday afternoon, on a whiteboard, three days before anyone kicked a ball. Opposition shape, set-piece triggers, the half-space nobody else noticed — all of it accounted for before the tunnel. When your side scores it looks less like magic and more like an appointment being kept.",
+      sig: "The substitution that was written down before kick-off."
+    },
+    chaos: {
+      name: "THE CHAOS AGENT",
+      desc: "Sixty minutes gone, a goal down, and you tear up a system that took four months to build. The bench does not understand it. The press box certainly does not. Twelve minutes later the stadium is on its feet and everybody agrees it was obvious all along.",
+      sig: "Centre-back to centre-forward, and nobody dares ask why."
+    },
+    architect: {
+      name: "THE ARCHITECT",
+      desc: "You are not building a team. You are building the thing that produces teams — pitches, an academy, scouts in towns nobody has heard of, a wage structure that still makes sense in six years. Rivals win the window. You win the decade.",
+      sig: "Signing the sixteen-year-old before anyone else has watched the tape."
+    },
+    dealmaker: {
+      name: "THE DEALMAKER",
+      desc: "The match is the highlights package. The real game happens in hotel lobbies, in a call taken at one in the morning, in a clause buried on page nine that nobody else bothered to read. You have never lost a negotiation you were properly awake for.",
+      sig: "The deadline-day double deal that funds itself."
+    },
+    chairman: {
+      name: "THE CHAIRMAN",
+      rare: true,
+      desc: "You refuse to choose. Tactics and balance sheets, patience and the killer instinct — you hold all four in the same hand and never let anyone see which one you are using. Managers trust you, boards quietly fear you, and the cabinet keeps filling with no single obvious explanation. This is the rarest reading in the game.",
+      sig: "Whatever the club needs that week — and it was ready in advance."
+    }
+  };
+
+  var MAX = QUESTIONS.length * 2;   /* 10 per axis */
+  /* Chairman: both axes within +/- BALANCED of centre. At 1 this fires on ~5.7%
+     of answer paths; raising it to 2 widens the centre box to ~24%. */
+  var BALANCED = 1;
+
+  var el = function (id) { return document.getElementById(id); };
+  var screens = { intro: el("intro"), quiz: el("quiz"), result: el("result") };
+  var step = 0, score = { x: 0, y: 0 }, locked = false;
+
+  function show(name) {
+    for (var k in screens) { screens[k].hidden = (k !== name); }
+  }
+
+  function transition(fn) {
+    var node = screens.quiz;
+    locked = true;
+    node.classList.add("fading");
+    window.setTimeout(function () {
+      fn();
+      node.classList.remove("fading");
+      locked = false;
+    }, 170);
+  }
+
+  function renderQuestion() {
+    var item = QUESTIONS[step];
+    el("progress").textContent = "Soru " + (step + 1) + " / " + QUESTIONS.length;
+    el("counter").textContent = String(step + 1).padStart(2, "0");
+    el("bar").style.width = ((step + 1) / QUESTIONS.length * 100) + "%";
+    el("qtext").textContent = item.q;
+
+    var box = el("options");
+    box.textContent = "";
+    item.options.forEach(function (opt, i) {
+      var b = document.createElement("button");
+      b.type = "button";
+      b.className = "opt";
+      var key = document.createElement("span");
+      key.className = "key";
+      key.setAttribute("aria-hidden", "true");
+      key.textContent = "ABCD".charAt(i);
+      var txt = document.createElement("span");
+      txt.textContent = opt.t;
+      b.appendChild(key);
+      b.appendChild(txt);
+      b.addEventListener("click", function () { choose(opt); });
+      box.appendChild(b);
+    });
+
+    el("live").textContent = "Soru " + (step + 1) + " / " + QUESTIONS.length + ". " + item.q;
+    el("qtext").focus();
+  }
+
+  function choose(opt) {
+    if (locked) { return; }
+    score.x += opt.x;
+    score.y += opt.y;
+    step += 1;
+    if (step < QUESTIONS.length) {
+      transition(renderQuestion);
+    } else {
+      transition(finish);
+    }
+  }
+
+  function resolve(x, y) {
+    if (Math.abs(x) <= BALANCED && Math.abs(y) <= BALANCED) { return PERSONAS.chairman; }
+    if (x < 0) { return y < 0 ? PERSONAS.tactician : PERSONAS.chaos; }
+    return y < 0 ? PERSONAS.architect : PERSONAS.dealmaker;
+  }
+
+  function finish() {
+    var p = resolve(score.x, score.y);
+    el("bar").style.width = "100%";
+    el("rare").hidden = !p.rare;
+    el("pName").textContent = p.name;
+    el("pDesc").textContent = p.desc;
+    el("pSig").textContent = p.sig;
+
+    var pctX = 50 + (score.x / MAX) * 46;
+    var pctY = 50 + (score.y / MAX) * 46;
+    el("dotX").style.left = pctX + "%";
+    el("dotY").style.left = pctY + "%";
+    el("lxA").className = score.x < 0 ? "on" : "";
+    el("lxB").className = score.x > 0 ? "on" : "";
+    el("lyA").className = score.y < 0 ? "on" : "";
+    el("lyB").className = score.y > 0 ? "on" : "";
+
+    el("dotX").setAttribute("title", "Pitch / Boardroom: " + (score.x > 0 ? "+" : "") + score.x);
+    el("dotY").setAttribute("title", "Patience / Impulse: " + (score.y > 0 ? "+" : "") + score.y);
+    el("note").textContent = "";
+
+    show("result");
+    el("pName").focus();
+  }
+
+  function shareLine() {
+    var p = resolve(score.x, score.y);
+    var url = location.href.split("#")[0];
+    return "I'm " + p.name + " in Efsane Başkan. What are you? " + url;
+  }
+
+  function legacyCopy(text) {
+    var ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.cssText = "position:fixed;top:0;left:-9999px";
+    document.body.appendChild(ta);
+    ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+
+  el("copyBtn").addEventListener("click", function () {
+    var text = shareLine();
+    var done = function (ok) {
+      el("note").textContent = ok ? "Panoya kopyalandı." : "Kopyalanamadı — metni elle seçebilirsin.";
+    };
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(text).then(function () { done(true); },
+        function () { done(legacyCopy(text)); });
+    } else {
+      done(legacyCopy(text));
+    }
+  });
+
+  el("startBtn").addEventListener("click", function () {
+    step = 0; score.x = 0; score.y = 0;
+    show("quiz");
+    renderQuestion();
+  });
+
+  el("againBtn").addEventListener("click", function () {
+    step = 0; score.x = 0; score.y = 0;
+    el("note").textContent = "";
+    show("intro");
+    el("startBtn").focus();
+  });
+})();
+</script>
+</body>
+</html>
