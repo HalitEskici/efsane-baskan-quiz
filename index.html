@@ -710,6 +710,18 @@
     return c;
   }
 
+  /* Filename slug from the persona name in the *selected* language.
+     Turkish letters are mapped before toLowerCase on purpose: JS lowercases
+     "İ" to "i" + U+0307 COMBINING DOT ABOVE, which would smuggle an
+     invisible combining mark into the filename. */
+  var TR_LETTERS = { "ç":"c","Ç":"c","ğ":"g","Ğ":"g","ı":"i","I":"i","İ":"i",
+                     "ö":"o","Ö":"o","ş":"s","Ş":"s","ü":"u","Ü":"u" };
+
+  function slugify(name) {
+    var s = name.replace(/[çÇğĞıIİöÖşŞüÜ]/g, function (m) { return TR_LETTERS[m]; }).toLowerCase();
+    return s.replace(/^the\s+/, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+  }
+
   function downloadImage() {
     var note = el("note");
     var go = function () {
@@ -720,7 +732,7 @@
         var url = URL.createObjectURL(blob);
         var a = document.createElement("a");
         a.href = url;
-        a.download = "efsane-baskan-" + persona + ".png";
+        a.download = "efsane-baskan-" + slugify(T().personas[persona].name) + ".png";
         document.body.appendChild(a);
         a.click();
         document.body.removeChild(a);
